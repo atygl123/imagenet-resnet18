@@ -1,0 +1,18 @@
+# E07 备用：E04 换第三个 seed（2024），用于凑成 3 seed 报均值±标准差
+# 任务书 §7.2："若做了多 seed，请报告均值与波动"——2 个 seed 算不出标准差，3 个才行。
+# 只有在 E00–E06 跑完、还剩至少 1 晚时才跑这一组。
+data: F:/data/imagenet
+cache: F:/cache/train_146
+val_labels: F:/data/imagenet/val_labels.txt
+epochs: 24
+batch_size: 256
+lr: 0.1
+wd: 0.0001
+res: 128
+seed: 2024
+eval_every: 5
+workers: 6
+sched: cosine
+warmup_epochs: 0
+label_smoothing: 0.1
+random_erasing: 0.25

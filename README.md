@@ -175,13 +175,40 @@ python src/train.py --config configs/e00_baseline.yaml --out runs/E00
 git rev-parse --short HEAD     # 抄进实验清单 L 列
 ```
 
-## 九、代码与数据来源说明
+## 九、代码与数据来源说明（任务书 §10.1）
 
-- 网络结构：`torchvision.models.resnet18`，**`weights=None`**（随机初始化，不使用预训练权重）。
-- 训练/评估/数据管线：本项目自行实现，流程参考 PyTorch 官方 `references/classification`。
-- 数据集：ImageNet-1K（ILSVRC2012），仅用于课程研究，遵守 ImageNet 非商业研究条款。
-  **报告里要写清实际下载渠道**（魔搭镜像 / HF 镜像）、样本数与分辨率。
-- `assets/imagenet_classes.py` 来自数据集官方仓库，用于生成 `classes.txt` 序号对照。
+### 9.1 网络结构
+
+| 项 | 内容 |
+|---|---|
+| 来源 | `torchvision.models.resnet18`（torchvision 0.29.1） |
+| 许可证 | **BSD-3-Clause**（torchvision 仓库，Copyright © PyTorch contributors） |
+| 原始出处 | He et al., *Deep Residual Learning for Image Recognition*, CVPR 2016 |
+| 我们的修改 | 仅将 `weights` 设为 `None`（随机初始化，不使用预训练权重），输出类别数设为 1000 |
+
+### 9.2 训练 / 评估 / 数据管线
+
+| 项 | 内容 |
+|---|---|
+| 来源 | 本项目自行实现（`src/train.py`、`src/eval.py`、`src/dataset.py`） |
+| 流程参考 | PyTorch 官方 `references/classification/train.py`（BSD-3-Clause），仅借鉴流程组织 |
+| 我们的修改 | 全部代码为本组编写；未使用 timm、mmclassification 等第三方训练框架 |
+
+**注：** 未直接复制官方 `train.py`，因此不构成对原文件的修改，仅流程结构参考。
+
+### 9.3 数据
+
+| 项 | 内容 |
+|---|---|
+| 数据集 | ImageNet-1K（ILSVRC 2012），1000 类 |
+| 使用规模 | 训练 1,281,167 张（全量）／验证 50,000 张（完整 val） |
+| 实际下载渠道 | 魔搭（ModelScope）镜像 `cutedataset/imagenet-1k`；验证集来自 HF 镜像 `evanarlian/imagenet_1k_resized_256` 的 val 划分 |
+| 许可证 | ImageNet 非商业研究与教育用途条款（Princeton/Stanford） |
+| 预处理 | 训练图短边缩放至 146px 缓存；训练时 `RandomResizedCrop(128)`；验证 `Resize(146) + CenterCrop(128)` |
+| 类别对照 | `assets/imagenet_classes.py` 中 1000 个 synset 与标签序号的映射 |
+
+**必须在报告中注明：** 数据经第三方镜像获取，非 ImageNet 官方站点直接下载。
+本项目的数字均为自训产出，未引用任何论文或他人报告的指标作为对照（符合 §10.3）。
 
 ## 十、已知限制
 
