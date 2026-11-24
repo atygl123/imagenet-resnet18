@@ -1,0 +1,16 @@
+# E03 丙：只把 step 换成 cosine（单因素，不叠 warmup，避免混两个变量）
+data: F:/data/imagenet
+cache: F:/cache/train_146
+val_labels: F:/data/imagenet/val_labels.txt
+epochs: 24
+batch_size: 256
+lr: 0.1
+wd: 0.0001
+res: 128
+seed: 42
+eval_every: 5
+workers: 6
+sched: cosine
+warmup_epochs: 0
+label_smoothing: 0.0
+random_erasing: 0.0

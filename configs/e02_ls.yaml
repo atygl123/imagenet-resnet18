@@ -1,0 +1,16 @@
+# E02 乙：只加标签平滑 0.1（其余与 E00 逐字相同）
+data: F:/data/imagenet
+cache: F:/cache/train_146
+val_labels: F:/data/imagenet/val_labels.txt
+epochs: 24
+batch_size: 256
+lr: 0.1
+wd: 0.0001
+res: 128
+seed: 42
+eval_every: 5
+workers: 6
+sched: step
+warmup_epochs: 0
+label_smoothing: 0.1
+random_erasing: 0.0

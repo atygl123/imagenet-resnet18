@@ -1,0 +1,16 @@
+# E00 基线：ResNet-18 / 128px / 40ep / step 调度 / 无任何改动  【甲】
+data: F:/data/imagenet
+cache: F:/cache/train_146
+val_labels: F:/data/imagenet/val_labels.txt
+epochs: 24
+batch_size: 256
+lr: 0.1
+wd: 0.0001
+res: 128
+seed: 42
+eval_every: 5
+workers: 6
+sched: step
+warmup_epochs: 0
+label_smoothing: 0.0
+random_erasing: 0.0
