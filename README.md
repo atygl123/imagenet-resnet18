@@ -231,36 +231,62 @@ git rev-parse --short HEAD     # 抄进实验清单 L 列
 如果实验日志一个都没进仓库，评审第 4 条（团队分工与可复现性）会直接失分。
 现在的规则是只忽略 `*.pth`，日志与指标全部保留——单组实验的文本产物只有几十 KB。
 
-### 推送步骤（以 Gitee 为例，国内访问快）
+### 推送步骤（GitHub）
 
-1. 在 [gitee.com](https://gitee.com) 新建仓库，**不要**勾选"初始化 README"（保持空仓库）
+1. 打开 [github.com/new](https://github.com/new)，仓库名如 `imagenet-resnet18`，
+   选 **Public**，**不要**勾 "Add a README file / .gitignore / license"（保持空仓库）
 2. 本地执行：
 
 ```bash
 cd F:/WorkBuddy/workspace/2026-11-16-09-52-10/imagenet-proj
-git remote add origin https://gitee.com/你的用户名/imagenet-resnet18.git
+git add -A
+git commit -m "results: E00 baseline 59.03 / 24ep"
+git remote add origin https://github.com/你的用户名/imagenet-resnet18.git
 git branch -M main
 git push -u origin main
 ```
 
-3. 给提交时的状态打一个标签，方便老师定位：
+3. 认证方式（**这一步最容易卡**）：GitHub 从 2021 年起不再接受账号密码，
+   必须用 Personal Access Token：
+
+   GitHub → Settings → Developer settings → Personal access tokens →
+   **Tokens (classic)** → Generate new token → 勾选 `repo` 权限 → 生成后复制
+
+   推送时提示输入：
+   - `Username`：你的 GitHub 用户名
+   - `Password`：**粘贴那串 token**（不是账号密码）
+
+   第一次输对后，Windows 凭据管理器会记住。若输错了想重来：
+   控制面板 → 凭据管理器 → Windows 凭据 → 删除 `git:https://github.com`。
+
+4. 打标签，方便老师定位到交付版本：
 
 ```bash
-git tag -a v1.0-submission -m "课程提交版本：7 组实验 + 分析文档"
+git tag -a v1.0-submission -m "课程提交版本：8 组实验 + 分析文档"
 git push origin v1.0-submission
 ```
 
 ### 交给老师的信息
 
 ```
-仓库：https://gitee.com/xxx/imagenet-resnet18
-提交版本：v1.0-submission（commit a3f9c1e）
-公开/私有：公开可直接克隆；私有请提供只读权限（Gitee：管理 → 仓库成员 → 邀请）
+仓库：https://github.com/xxx/imagenet-resnet18
+提交版本：v1.0-submission（commit 1a2b3c4）
+内容：src/ configs/ report/ runs/（含 8 组实验日志）+ README
 ```
 
-私有仓库一定要提前给老师或助教开权限，否则对方打开是 404——这是最常见的翻车方式。
+公开仓库老师直接点开即可，不需要额外授权。
 
-### 如果实在不想建远程仓库
+### 推送前自查（30 秒）
 
-任务书允许"打包为一个压缩文件"。那就把 `src/ configs/ runs/ report/ README.md` 打成一个 zip，
+```bash
+git ls-files | wc -l          # 应该只有几十个文件
+git ls-files runs | wc -l     # 应该有日志，没有 .pth
+du -sh .git                   # 应该只有几 MB
+```
+
+如果 `.git` 超过 100MB，说明有大文件被提交了，先 `git rm --cached` 再重新提交。
+
+### 如果不想建远程仓库
+
+任务书允许"打包为一个压缩文件"。把 `src/ configs/ runs/ report/ README.md` 打成 zip 即可，
 但**仓库链接更推荐**：老师能直接 `git clone` 跑，比解压翻目录可信得多。
