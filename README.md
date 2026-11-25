@@ -1,19 +1,44 @@
 # ImageNet 分类 · 训练与评估管线
 
 ResNet-18 / ImageNet-1K / 128px / RTX 3060 Laptop 6GB。
-配合 `../imagenet-schedule/` 里的排期表和三人执行手册使用。
+本组三人协作完成，排期与分工见所在课程作业包。
 
 ## 一、环境
 
-Python 环境在**隔壁目录**，不要重复装：
+**从零搭建（他人复现时走这条）：**
 
 ```bash
-cd F:/WorkBuddy/workspace/2026-11-16-09-52-10/imagenet-proj
-source ../imagenet-schedule/.venv/Scripts/activate    # Git Bash
-# cmd 下用：..\imagenet-schedule\.venv\Scripts\activate.bat
+git clone https://github.com/atygl123/imagenet-resnet18.git
+cd imagenet-resnet18
+
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Linux/macOS: source .venv/bin/activate
+
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+pip install -r requirements.txt
 ```
 
-已装：torch 2.14.1+cu126、torchvision 0.29.1、pillow、pyyaml、pyarrow。
+验证：
+
+```bash
+python -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+```
+
+预期输出 `2.14.1+cu126 True`（版本可略有差异，能识别到 GPU 即可）。
+
+**依赖版本**（也见 `requirements.txt`）：
+
+| 包 | 版本 | 用途 |
+|---|---|---|
+| torch | 2.14.1+cu126 | 训练与推理 |
+| torchvision | 0.29.1 | ResNet-18 结构与图像变换 |
+| pillow | 13.0.0 | JPEG 解码 |
+| pyyaml | 6.0.4 | 实验配置文件 |
+| pyarrow | 26.0.1 | 读取 parquet 数据分片 |
+
+> 本组开发时用的是项目外的虚拟环境，路径写死在本机。**提交版已改为上面的标准流程**，
+> 他人克隆后按此步骤即可，无需原作者的目录结构。
 
 ## 二、目录
 
@@ -128,6 +153,9 @@ python src/train.py --config configs/e04_combo.yaml     --out runs/E04   # 组�
 python src/train.py --config configs/e05_ablate.yaml    --out runs/E05   # 消融
 python src/train.py --config configs/e06_seed123.yaml   --out runs/E06   # 复现 乙
 ```
+
+> **路径说明：** `configs/*.yaml` 里的 `data` / `cache` / `val_labels` 是开发机上的绝对路径
+> （Windows `F:/...`）。**复现时请改成你自己的路径**，这是唯一需要手动修改的地方。
 
 每组约 **6.6 小时**（24 epoch × 15.8 分钟）。产物：`meta.json`（commit/dirty）、`log.jsonl`（逐 epoch）、`best.pth`、`summary.json`。
 

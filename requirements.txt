@@ -1,0 +1,4 @@
+# PyTorch 按 README 的 --index-url 单独安装（CUDA 12.6 版本），此处仅列其余依赖
+pillow==13.0.0
+PyYAML==6.0.4
+pyarrow==26.0.1
